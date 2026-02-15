@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, reca
 import matplotlib.pyplot as plt
 import io
 
-def run_xgboost_evaluation(X, y):
+def run_xgboost_evaluation(X, y, display_labels_arr):
     # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -16,13 +16,13 @@ def run_xgboost_evaluation(X, y):
 
     # Make predictions
     y_pred = model.predict(X_test)
-    
+
     # Check if there are at least two classes in y_test for roc_auc_score
     if len(y_test.unique()) > 1:
-        y_proba = model.predict_proba(X_test)[:, 1] # Probability of the positive class
+        y_proba = model.predict_proba(X_test)[:, 1]
         auc_score = roc_auc_score(y_test, y_proba)
     else:
-        auc_score = 0.0 # AUC is not well-defined for single-class data
+        auc_score = 0.0
 
     # Calculate metrics
     accuracy = accuracy_score(y_test, y_pred)
@@ -34,7 +34,7 @@ def run_xgboost_evaluation(X, y):
     # Generate Confusion Matrix plot
     cm = confusion_matrix(y_test, y_pred)
     fig, ax = plt.subplots(figsize=(6, 6))
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels_arr)
     disp.plot(cmap=plt.cm.Blues, ax=ax)
     ax.set_title('Confusion Matrix - XGBoost Classifier')
 
