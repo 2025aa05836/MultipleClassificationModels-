@@ -4,12 +4,12 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 import io
 
 # Import model logic functions
-from models.logistic_regression_logic import run_logistic_regression_evaluation
-from models.decision_tree_logic import run_decision_tree_evaluation
-from models.knn_logic import run_knn_evaluation
-from models.naive_bayes_logic import run_naive_bayes_evaluation
-from models.random_forest_logic import run_random_forest_evaluation
-from models.xgboost_logic import run_xgboost_evaluation
+from model.logistic_regression_logic import run_logistic_regression_evaluation
+from model.decision_tree_logic import run_decision_tree_evaluation
+from model.knn_logic import run_knn_evaluation
+from model.naive_bayes_logic import run_naive_bayes_evaluation
+from model.random_forest_logic import run_random_forest_evaluation
+from model.xgboost_logic import run_xgboost_evaluation
 
 # Set the title of the Streamlit application
 st.title('Machine Learning Model Evaluation Dashboard')
@@ -128,3 +128,4 @@ if uploaded_file is not None:
         st.error(f"Error processing file or running model: {e}")
 else:
     st.info("Please upload a CSV file to get started.")
+
