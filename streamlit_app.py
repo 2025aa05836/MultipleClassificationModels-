@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 import io
 
 # Import model logic functions
@@ -53,8 +53,16 @@ if uploaded_file is not None:
         st.write(f"Automatically selected target variable: **{target_column}** (last column)")
 
         # Separate features (X) and target (y)
-        X = df.iloc[:, :-1] # All columns except the last one are features
-        y = df[target_column] # The last column is the target
+        X = df.iloc[:, :-1]
+        y = df[target_column]
+
+        # Encode target variable if it's categorical (string or object type)
+        # Store original labels for confusion matrix display
+        original_y_labels = y.unique()
+        if y.dtype == 'object' or y.dtype == 'category':
+            le = LabelEncoder()
+            y = pd.Series(le.fit_transform(y), name=y.name) # Transform y to numerical
+            original_y_labels = le.classes_ # Use LabelEncoder's classes for display
 
         # Identify categorical and numerical columns
         categorical_cols = X.select_dtypes(include=['object', 'category']).columns
@@ -81,18 +89,19 @@ if uploaded_file is not None:
         st.write(f"Selected model: **{selected_model}**")
 
         results = None
+        # Pass original_y_labels to model evaluation functions
         if selected_model == 'Logistic Regression':
-            results = run_logistic_regression_evaluation(X_processed, y)
+            results = run_logistic_regression_evaluation(X_processed, y, original_y_labels)
         elif selected_model == 'Decision Tree Classifier':
-            results = run_decision_tree_evaluation(X_processed, y)
+            results = run_decision_tree_evaluation(X_processed, y, original_y_labels)
         elif selected_model == 'K-Nearest Neighbor Classifier':
-            results = run_knn_evaluation(X_processed, y)
+            results = run_knn_evaluation(X_processed, y, original_y_labels)
         elif selected_model == 'Naive Bayes Classifier':
-            results = run_naive_bayes_evaluation(X_processed, y)
+            results = run_naive_bayes_evaluation(X_processed, y, original_y_labels)
         elif selected_model == 'Random Forest':
-            results = run_random_forest_evaluation(X_processed, y)
+            results = run_random_forest_evaluation(X_processed, y, original_y_labels)
         elif selected_model == 'XGBoost':
-            results = run_xgboost_evaluation(X_processed, y)
+            results = run_xgboost_evaluation(X_processed, y, original_y_labels)
 
         if results:
             st.subheader(f"Evaluation Metrics for {selected_model}")
