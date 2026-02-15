@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, reca
 import matplotlib.pyplot as plt
 import io
 
-def run_logistic_regression_evaluation(X, y):
+def run_logistic_regression_evaluation(X, y, display_labels_arr):
     # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -29,7 +29,7 @@ def run_logistic_regression_evaluation(X, y):
     # Generate Confusion Matrix plot
     cm = confusion_matrix(y_test, y_pred)
     fig, ax = plt.subplots(figsize=(6, 6))
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels_arr)
     disp.plot(cmap=plt.cm.Blues, ax=ax)
     ax.set_title('Confusion Matrix - Logistic Regression')
 
